@@ -41,6 +41,9 @@ public class USSSpells
             LazyOptional.of(TROLL_MAGIC_RESIST::get),
             LazyOptional.of(SoundRegistry.HOLY_CAST::get),
             TROLL_MAGIC));
+    
+    public static final RegistryObject<AbstractSpell> DISORGANIZATION = registerSpell(new DisorganizationSpell());
+    public static final RegistryObject<AbstractSpell> FATTEN = registerSpell(new FattenSpell());
 
     public static RegistryObject<AbstractSpell> registerSpell(AbstractSpell spell)
     {

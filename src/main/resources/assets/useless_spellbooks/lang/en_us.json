@@ -1,5 +1,7 @@
 {
 	"attribute.useless_spellbooks.troll_magic_resist": "Troll Magic Resist",
 	"attribute.useless_spellbooks.troll_spell_power": "Troll Spell Power",
-	"school.useless_spellbooks.troll": "Troll"
+	"school.useless_spellbooks.troll": "Troll",
+	"spell.useless_spellbooks.disorganization": "Disorganization",
+	"spell.useless_spellbooks.fatten": "Fatten"
 }
