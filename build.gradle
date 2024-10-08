@@ -143,6 +143,11 @@ repositories {
     // flatDir {
     //     dir 'libs'
     // }
+    
+    maven {
+        name = "Iron's Maven - Release"
+        url = "https://code.redspace.io/releases"
+    }
 	
 	maven { url = "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/" }
     maven { url = "https://maven.theillusivec4.top" }
@@ -161,7 +166,11 @@ dependencies {
 	annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 	implementation fg.deobf("curse.maven:entity-tickrate-api-969702:5713406")
 	
+	compileOnly fg.deobf("io.redspace.ironsspellbooks:irons_spellbooks:${irons_spells_version}")
+    runtimeOnly fg.deobf("io.redspace.ironsspellbooks:irons_spellbooks:${irons_spells_version}")
+	
 	implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${geckolib_version}")
+	implementation("com.eliotlash.mclib:mclib:20")
 
     compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:${caelus_version}:api")
     runtimeOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:${caelus_version}")
