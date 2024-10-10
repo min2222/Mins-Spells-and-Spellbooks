@@ -1,6 +1,6 @@
-package com.min01.uss.spells;
+package com.min01.mss.spells;
 
-import com.min01.uss.UselessSpellbooks;
+import com.min01.mss.MinsSpellbooks;
 
 import io.redspace.ironsspellbooks.api.config.DefaultConfig;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
@@ -22,11 +22,11 @@ import net.minecraft.world.level.Level;
 @AutoSpellConfig
 public class DisorganizationSpell extends AbstractSpell
 {
-    private final ResourceLocation spellId = new ResourceLocation(UselessSpellbooks.MODID, "disorganization");
+    private final ResourceLocation spellId = new ResourceLocation(MinsSpellbooks.MODID, "disorganization");
     
     private final DefaultConfig defaultConfig = new DefaultConfig()
             .setMinRarity(SpellRarity.COMMON)
-            .setSchoolResource(USSSpells.TROLL_RESOURCE)
+            .setSchoolResource(MSSSpells.TROLL_RESOURCE)
             .setMaxLevel(1)
             .setCooldownSeconds(30)
             .build();

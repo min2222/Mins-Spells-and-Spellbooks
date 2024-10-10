@@ -15,11 +15,11 @@ license="GPLv3 License"
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
 # The modid of the mod
-modId="useless_spellbooks" #mandatory
+modId="mins_spellbooks" #mandatory
 # The version number of the mod
 version="1.0.0" #mandatory
 # A display name for the mod
-displayName="Useless Spells and Spellbooks" #mandatory
+displayName="Min's Spells and Spellbooks" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification https://docs.minecraftforge.net/en/latest/misc/updatechecker/
 #updateJSONURL="" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
@@ -39,9 +39,9 @@ authors="min01" #optional
 #displayTest="MATCH_VERSION" # MATCH_VERSION is the default if nothing is specified (#optional)
 
 # The description text for the mod (multi line!) (#mandatory)
-description='''an iss addon that adds some pretty useless spells (alongside few of actual useful spells)'''
+description='''my one iss addon.'''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.useless_spellbooks]] #optional
+[[dependencies.mins_spellbooks]] #optional
     # the modid of the dependency
     modId="forge" #mandatory
     # Does this dependency have to exist - if not, ordering below must be specified
@@ -55,44 +55,44 @@ description='''an iss addon that adds some pretty useless spells (alongside few 
     # Side this dependency is applied on - BOTH, CLIENT, or SERVER
     side="BOTH"
 # Here's another dependency
-[[dependencies.useless_spellbooks]]
+[[dependencies.mins_spellbooks]]
     modId="minecraft"
     mandatory=true
     # This version range declares a minimum of the current minecraft version up to but not including the next major version
     versionRange="[1.20.1,1.21)"
     ordering="NONE"
     side="BOTH"
-[[dependencies.useless_spellbooks]]
+[[dependencies.mins_spellbooks]]
     modId="playeranimator" #mandatory
     mandatory=true #mandatory
     versionRange="[1.0.2-rc1+1.20,)" #mandatory
     ordering="AFTER"
     side="BOTH"
-[[dependencies.useless_spellbooks]]
+[[dependencies.mins_spellbooks]]
     modId="geckolib" #mandatory
     mandatory=true #mandatory
     versionRange="[1.20.1:4.4.5,)" #mandatory
     ordering="NONE"
     side="BOTH"
-[[dependencies.useless_spellbooks]]
+[[dependencies.mins_spellbooks]]
     modId="curios" #mandatory
     mandatory=true #mandatory
     versionRange="[5.4.7+1.20.1,)" #mandatory
     ordering="NONE"
     side="BOTH"
-[[dependencies.useless_spellbooks]]
+[[dependencies.mins_spellbooks]]
     modId="caelus" #mandatory
     mandatory=true #mandatory
     versionRange="[3.1.0+1.20,)" #mandatory
     ordering="NONE"
     side="BOTH"
-[[dependencies.useless_spellbooks]]
+[[dependencies.mins_spellbooks]]
     modId="entitytickrateapi" #mandatory
     mandatory=true #mandatory
     versionRange="[1.0.0,)" #mandatory
     ordering="NONE"
     side="BOTH"
-[[dependencies.useless_spellbooks]]
+[[dependencies.mins_spellbooks]]
     modId="irons_spellbooks" #mandatory
     mandatory=true #mandatory
     versionRange="[1.20.1-3.4.0.2,)" #mandatory
@@ -101,5 +101,5 @@ description='''an iss addon that adds some pretty useless spells (alongside few 
 # Features are specific properties of the game environment, that you may want to declare you require. This example declares
 # that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't
 # stop your mod loading on the server for example.
-#[features.useless_spellbooks]
+#[features.mins_spellbooks]
 #openGLVersion="[3.2,)"

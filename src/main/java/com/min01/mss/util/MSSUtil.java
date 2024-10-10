@@ -1,4 +1,4 @@
-package com.min01.uss.util;
+package com.min01.mss.util;
 
 import java.lang.reflect.Method;
 import java.util.UUID;
@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
-public class USSUtil 
+public class MSSUtil 
 {
 	@SuppressWarnings("unchecked")
 	public static Entity getEntityByUUID(Level level, UUID uuid)

@@ -1,6 +1,6 @@
-package com.min01.uss.event;
+package com.min01.mss.event;
 
-import com.min01.uss.UselessSpellbooks;
+import com.min01.mss.MinsSpellbooks;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -8,7 +8,7 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = UselessSpellbooks.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = MinsSpellbooks.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EventHandlerForge
 {
     @SuppressWarnings("removal")

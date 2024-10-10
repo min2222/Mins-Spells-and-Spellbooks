@@ -1,9 +1,9 @@
-package com.min01.uss.spells;
+package com.min01.mss.spells;
 
 import java.util.function.Predicate;
 
-import com.min01.uss.UselessSpellbooks;
-import com.min01.uss.misc.USSTargetEntityCastData;
+import com.min01.mss.MinsSpellbooks;
+import com.min01.mss.misc.MSSTargetEntityCastData;
 
 import io.redspace.ironsspellbooks.api.config.DefaultConfig;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
@@ -31,11 +31,11 @@ import net.minecraft.world.phys.HitResult;
 @AutoSpellConfig
 public class FattenSpell extends AbstractSpell
 {
-    private final ResourceLocation spellId = new ResourceLocation(UselessSpellbooks.MODID, "fatten");
+    private final ResourceLocation spellId = new ResourceLocation(MinsSpellbooks.MODID, "fatten");
     
     private final DefaultConfig defaultConfig = new DefaultConfig()
             .setMinRarity(SpellRarity.RARE)
-            .setSchoolResource(USSSpells.TROLL_RESOURCE)
+            .setSchoolResource(MSSSpells.TROLL_RESOURCE)
             .setMaxLevel(10)
             .setCooldownSeconds(10)
             .build();
@@ -61,7 +61,7 @@ public class FattenSpell extends AbstractSpell
     	HitResult target = Utils.raycastForEntity(caster.level, caster, range, true, aimAssist);
     	if(target instanceof EntityHitResult entityHit && entityHit.getEntity() instanceof LivingEntity livingTarget && filter.test(livingTarget)) 
     	{
-    		USSTargetEntityCastData data = new USSTargetEntityCastData();
+    		MSSTargetEntityCastData data = new MSSTargetEntityCastData();
     		data.setTarget(livingTarget);
     		playerMagicData.setAdditionalCastData(data);
     		if(caster instanceof ServerPlayer serverPlayer) 
@@ -88,7 +88,7 @@ public class FattenSpell extends AbstractSpell
     @Override
     public void onClientCast(Level level, int spellLevel, LivingEntity entity, ICastData castData)
     {
-        if(castData instanceof USSTargetEntityCastData targetData)
+        if(castData instanceof MSSTargetEntityCastData targetData)
         {
         	LivingEntity targetEntity = targetData.getTarget(level);
     		CompoundTag tag = targetEntity.getPersistentData();
@@ -103,13 +103,13 @@ public class FattenSpell extends AbstractSpell
     @Override
     public ICastDataSerializable getEmptyCastData()
     {
-    	return new USSTargetEntityCastData();
+    	return new MSSTargetEntityCastData();
     }
     
     @Override
     public void onCast(Level level, int spellLevel, LivingEntity entity, CastSource castSource, MagicData playerMagicData) 
     {
-        if(playerMagicData.getAdditionalCastData() instanceof USSTargetEntityCastData targetData)
+        if(playerMagicData.getAdditionalCastData() instanceof MSSTargetEntityCastData targetData)
         {
             LivingEntity targetEntity = targetData.getTarget(level);
             targetEntity.getPersistentData().putBoolean("Fatten", true);

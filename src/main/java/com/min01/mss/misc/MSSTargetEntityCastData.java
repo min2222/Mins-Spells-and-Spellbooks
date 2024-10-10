@@ -1,10 +1,10 @@
-package com.min01.uss.misc;
+package com.min01.mss.misc;
 
 import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.min01.uss.util.USSUtil;
+import com.min01.mss.util.MSSUtil;
 
 import io.redspace.ironsspellbooks.api.spells.ICastDataSerializable;
 import net.minecraft.nbt.CompoundTag;
@@ -12,7 +12,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
-public class USSTargetEntityCastData implements ICastDataSerializable
+public class MSSTargetEntityCastData implements ICastDataSerializable
 {
     private UUID targetUUID;
     
@@ -24,7 +24,7 @@ public class USSTargetEntityCastData implements ICastDataSerializable
     @Nullable
     public LivingEntity getTarget(Level level)
     {
-        return (LivingEntity) USSUtil.getEntityByUUID(level, this.targetUUID);
+        return (LivingEntity) MSSUtil.getEntityByUUID(level, this.targetUUID);
     }
     
 	@Override
