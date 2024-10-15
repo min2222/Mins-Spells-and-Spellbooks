@@ -1,5 +1,8 @@
 package com.min01.mss;
 
+import com.min01.mss.misc.MSSAttributes;
+import com.min01.mss.misc.MSSSchools;
+import com.min01.mss.network.MSSNetwork;
 import com.min01.mss.spells.MSSSpells;
 
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -15,7 +18,9 @@ public class MinsSpellbooks
 	{
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		MSSSpells.SPELLS.register(bus);
-		MSSSpells.SCHOOLS.register(bus);
-		MSSSpells.ATTRIBUTES.register(bus);
+		MSSSchools.SCHOOLS.register(bus);
+		MSSAttributes.ATTRIBUTES.register(bus);
+		
+		MSSNetwork.registerMessages();
 	}
 }

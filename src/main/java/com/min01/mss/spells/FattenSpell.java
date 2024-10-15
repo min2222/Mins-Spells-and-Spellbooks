@@ -3,6 +3,7 @@ package com.min01.mss.spells;
 import java.util.function.Predicate;
 
 import com.min01.mss.MinsSpellbooks;
+import com.min01.mss.misc.MSSSchools;
 import com.min01.mss.misc.MSSTargetEntityCastData;
 
 import io.redspace.ironsspellbooks.api.config.DefaultConfig;
@@ -35,7 +36,7 @@ public class FattenSpell extends AbstractSpell
     
     private final DefaultConfig defaultConfig = new DefaultConfig()
             .setMinRarity(SpellRarity.RARE)
-            .setSchoolResource(MSSSpells.TROLL_RESOURCE)
+            .setSchoolResource(MSSSchools.TROLL_RESOURCE)
             .setMaxLevel(10)
             .setCooldownSeconds(10)
             .build();

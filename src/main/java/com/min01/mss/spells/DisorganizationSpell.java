@@ -1,6 +1,7 @@
 package com.min01.mss.spells;
 
 import com.min01.mss.MinsSpellbooks;
+import com.min01.mss.misc.MSSSchools;
 
 import io.redspace.ironsspellbooks.api.config.DefaultConfig;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
@@ -26,7 +27,7 @@ public class DisorganizationSpell extends AbstractSpell
     
     private final DefaultConfig defaultConfig = new DefaultConfig()
             .setMinRarity(SpellRarity.COMMON)
-            .setSchoolResource(MSSSpells.TROLL_RESOURCE)
+            .setSchoolResource(MSSSchools.TROLL_RESOURCE)
             .setMaxLevel(1)
             .setCooldownSeconds(30)
             .build();

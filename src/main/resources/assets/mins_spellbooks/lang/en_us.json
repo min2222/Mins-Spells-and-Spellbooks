@@ -3,6 +3,9 @@
 	"attribute.mins_spellbooks.troll_spell_power": "Troll Spell Power",
 	"school.mins_spellbooks.troll": "Troll",
 	"spell.mins_spellbooks.disorganization": "Disorganization",
+	"spell.mins_spellbooks.disorganization.guide": "disorganization target's inventory (only work to player)",
 	"spell.mins_spellbooks.fatten": "Fatten",
-	"spell.mins_spellbooks.spinning": "Spinning"
+	"spell.mins_spellbooks.fatten.guide": "make target thick",
+	"spell.mins_spellbooks.spinning": "Spinning",
+	"spell.mins_spellbooks.spinning.guide": "spin your self and deal damage to nearby entities"
 }
