@@ -7,5 +7,8 @@
 	"spell.mins_spellbooks.fatten": "Fatten",
 	"spell.mins_spellbooks.fatten.guide": "make target thick",
 	"spell.mins_spellbooks.spinning": "Spinning",
-	"spell.mins_spellbooks.spinning.guide": "spin your self and deal damage to nearby entities"
+	"spell.mins_spellbooks.spinning.guide": "spin your self and deal damage to nearby entities",
+	"spell.mins_spellbooks.bouncing_laser": "Bouncing Laser",
+	"spell.mins_spellbooks.bouncing_laser.guide": "shoot a laser that bounce off walls",
+	"entity.mins_spellbooks.laser_segment": "Laser Segment"
 }

@@ -1,5 +1,6 @@
 package com.min01.mss;
 
+import com.min01.mss.entity.MSSEntities;
 import com.min01.mss.misc.MSSAttributes;
 import com.min01.mss.misc.MSSSchools;
 import com.min01.mss.network.MSSNetwork;
@@ -20,6 +21,7 @@ public class MinsSpellbooks
 		MSSSpells.SPELLS.register(bus);
 		MSSSchools.SCHOOLS.register(bus);
 		MSSAttributes.ATTRIBUTES.register(bus);
+		MSSEntities.ENTITY_TYPES.register(bus);
 		
 		MSSNetwork.registerMessages();
 	}
