@@ -3,7 +3,6 @@ package com.min01.mss.spells;
 import com.min01.mss.MinsSpellbooks;
 import com.min01.mss.entity.EntityLaserSegment;
 import com.min01.mss.entity.MSSEntities;
-import com.min01.mss.util.MSSUtil;
 
 import io.redspace.ironsspellbooks.api.config.DefaultConfig;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
@@ -44,8 +43,7 @@ public class BouncingLaserSpell extends AbstractSpell
     	EntityLaserSegment segment = new EntityLaserSegment(MSSEntities.LASER_SEGMENT.get(), level);
     	HitResult result = Utils.raycastForEntity(level, entity, 100.0F, true, 0.1F);
     	segment.setPos(result.getLocation());
-    	segment.setBounceVector(result.getLocation());
-    	segment.setDeltaMovement(MSSUtil.fromToVector(entity.getEyePosition(), result.getLocation(), 5.0F));
+    	segment.shootFromRotation(entity, entity.getXRot(), entity.getYRot(), 0.0F, 5.0F, 0.0F);
     	level.addFreshEntity(segment);
     	
     	EntityLaserSegment segment1 = new EntityLaserSegment(MSSEntities.LASER_SEGMENT.get(), level);
