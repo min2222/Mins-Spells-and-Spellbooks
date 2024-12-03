@@ -87,7 +87,7 @@ description='''my one iss addon.'''
     ordering="NONE"
     side="BOTH"
 [[dependencies.mins_spellbooks]]
-    modId="entitytickrateapi" #mandatory
+    modId="tickrateapi" #mandatory
     mandatory=true #mandatory
     versionRange="[1.0.0,)" #mandatory
     ordering="NONE"

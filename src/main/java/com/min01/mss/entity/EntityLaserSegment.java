@@ -2,7 +2,9 @@ package com.min01.mss.entity;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Predicate;
 
+import com.min01.mss.misc.MSSEntityDataSerializers;
 import com.min01.mss.util.MSSUtil;
 
 import net.minecraft.core.Direction;
@@ -12,54 +14,105 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.ThrowableProjectile;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class EntityLaserSegment extends ThrowableProjectile
+public class EntityLaserSegment extends Projectile
 {
 	public static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(EntityLaserSegment.class, EntityDataSerializers.OPTIONAL_UUID);
+	public static final EntityDataAccessor<Vec3> BOUNCE_VECTOR = SynchedEntityData.defineId(EntityLaserSegment.class, MSSEntityDataSerializers.VEC3.get());
 	public static final String BOUNCE = "Bounce";
 	public static final int MAX_BOUNCE = 10;
 	
-	public EntityLaserSegment(EntityType<? extends ThrowableProjectile> pEntityType, Level pLevel)
+	public EntityLaserSegment(EntityType<? extends Projectile> pEntityType, Level pLevel) 
 	{
 		super(pEntityType, pLevel);
-		this.setNoGravity(true);
 		this.noCulling = true;
-	}
-	
-	public EntityLaserSegment(EntityType<? extends ThrowableProjectile> pEntityType, double pX, double pY, double pZ, Level pLevel)
-	{
-		super(pEntityType, pX, pY, pZ, pLevel);
 		this.setNoGravity(true);
-		this.noCulling = true;
 	}
 
-	public EntityLaserSegment(EntityType<? extends ThrowableProjectile> pEntityType, LivingEntity pShooter, Level pLevel) 
+	public EntityLaserSegment(EntityType<? extends Projectile> pEntityType, double pX, double pY, double pZ, Level pLevel) 
 	{
-		super(pEntityType, pShooter, pLevel);
-		this.setNoGravity(true);
-		this.noCulling = true;
+		this(pEntityType, pLevel);
+		this.setPos(pX, pY, pZ);
+	}
+
+	public EntityLaserSegment(EntityType<? extends Projectile> pEntityType, LivingEntity pShooter, Level pLevel) 
+	{
+		this(pEntityType, pShooter.getX(), pShooter.getEyeY() - (double)0.1F, pShooter.getZ(), pLevel);
+		this.setOwner(pShooter);
 	}
 
 	@Override
 	protected void defineSynchedData() 
 	{
+		this.entityData.define(BOUNCE_VECTOR, this.position());
 		this.entityData.define(OWNER_UUID, Optional.empty());
 	}
 	
 	@Override
-	public void tick() 
+	public boolean shouldRenderAtSqrDistance(double pDistance)
+	{
+		double d0 = this.getBoundingBox().getSize() * 4.0D;
+		if(Double.isNaN(d0))
+		{
+			d0 = 4.0D;
+		}
+
+		d0 *= 64.0D;
+		return pDistance < d0 * d0;
+	}
+	
+	@Override
+	public void tick()
 	{
 		super.tick();
-		
+		HitResult hitResult = getHitResultOnMoveVector(this, this::canHitEntity);
+		if(hitResult.getType() != HitResult.Type.MISS && this.getDeltaMovement() != Vec3.ZERO)
+		{
+			this.onHit(hitResult);
+		}
+		this.checkInsideBlocks();
+		this.updateRotation();
+	      
 		if(this.tickCount >= 10)
 		{
 			this.discard();
 		}
+		
+		this.setBounceVector(this.getBounceVector().add(this.getDeltaMovement()));
+	}
+	
+	public static HitResult getHitResultOnMoveVector(EntityLaserSegment pProjectile, Predicate<Entity> pFilter) 
+	{
+		Vec3 vec3 = pProjectile.getDeltaMovement();
+		Level level = pProjectile.level();
+		Vec3 vec31 = pProjectile.getBounceVector();
+		return getHitResult(vec31, pProjectile, pFilter, vec3, level);
+	}
+	
+	private static HitResult getHitResult(Vec3 pStartVec, Entity pProjectile, Predicate<Entity> pFilter, Vec3 pEndVecOffset, Level pLevel) 
+	{
+		Vec3 vec3 = pStartVec.add(pEndVecOffset);
+		HitResult hitresult = pLevel.clip(new ClipContext(pStartVec, vec3, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, pProjectile));
+		if(hitresult.getType() != HitResult.Type.MISS) 
+		{
+			vec3 = hitresult.getLocation();
+		}
+
+		HitResult hitresult1 = ProjectileUtil.getEntityHitResult(pLevel, pProjectile, pStartVec, vec3, pProjectile.getBoundingBox().expandTowards(pEndVecOffset).inflate(1.0D), pFilter);
+		if(hitresult1 != null)
+		{
+			hitresult = hitresult1;
+		}
+		return hitresult;
 	}
 	
 	@Override
@@ -68,42 +121,44 @@ public class EntityLaserSegment extends ThrowableProjectile
 		super.onHitBlock(pResult);
 		
 	    int bounce = this.getPersistentData().getInt(BOUNCE);
-	    double motionx = this.getDeltaMovement().x;
-	    double motiony = this.getDeltaMovement().y;
-	    double motionz = this.getDeltaMovement().z;
+	    double x = this.getDeltaMovement().x;
+	    double y = this.getDeltaMovement().y;
+	    double z = this.getDeltaMovement().z;
 
 		Direction direction = pResult.getDirection();
 		
 		if(direction == Direction.EAST) 
 		{
-			motionx = -motionx;
+			x = -x;
 		}
 		else if(direction == Direction.SOUTH) 
 		{
-			motionz = -motionz;
+			z = -z;
 		}
 		else if(direction == Direction.WEST) 
 		{
-			motionx = -motionx;
+			x = -x;
 		}
 		else if(direction == Direction.NORTH)
 		{
-			motionz = -motionz;
+			z = -z;
 		}
 		else if(direction == Direction.UP)
 		{
-			motiony = -motiony;
+			y = -y;
 		}
 		else if(direction == Direction.DOWN)
 		{
-			motiony = -motiony;
+			y = -y;
 		}
 		
 		if(bounce < MAX_BOUNCE)
 		{
 			EntityLaserSegment segment = new EntityLaserSegment(MSSEntities.LASER_SEGMENT.get(), this.level);
-			segment.setPos(pResult.getLocation());
-			segment.setDeltaMovement(motionx, motiony, motionz);
+			Vec3 motion = new Vec3(x, y, z);
+			segment.move(MoverType.SELF, pResult.getLocation().add(motion));
+			segment.setBounceVector(pResult.getLocation());
+			segment.setDeltaMovement(motion);
 			segment.getPersistentData().putInt(BOUNCE, bounce + 1);
 			this.level.addFreshEntity(segment);
 			this.setOwner(segment);
@@ -131,5 +186,15 @@ public class EntityLaserSegment extends ThrowableProjectile
 			return MSSUtil.getEntityByUUID(this.level, this.entityData.get(OWNER_UUID).get());
 		}
 		return null;
+	}
+	
+	public void setBounceVector(Vec3 value)
+	{
+		this.entityData.set(BOUNCE_VECTOR, value);
+	}
+	
+	public Vec3 getBounceVector()
+	{
+		return this.entityData.get(BOUNCE_VECTOR);
 	}
 }

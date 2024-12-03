@@ -43,8 +43,9 @@ public class BouncingLaserSpell extends AbstractSpell
     {
     	EntityLaserSegment segment = new EntityLaserSegment(MSSEntities.LASER_SEGMENT.get(), level);
     	HitResult result = Utils.raycastForEntity(level, entity, 100.0F, true, 0.1F);
-    	segment.setPos(entity.getEyePosition());
-    	segment.setDeltaMovement(MSSUtil.fromToVector(segment.position(), result.getLocation(), 5.0F));
+    	segment.setPos(result.getLocation());
+    	segment.setBounceVector(result.getLocation());
+    	segment.setDeltaMovement(MSSUtil.fromToVector(entity.getEyePosition(), result.getLocation(), 5.0F));
     	level.addFreshEntity(segment);
     	
     	EntityLaserSegment segment1 = new EntityLaserSegment(MSSEntities.LASER_SEGMENT.get(), level);
