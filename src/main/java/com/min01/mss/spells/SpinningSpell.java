@@ -82,8 +82,7 @@ public class SpinningSpell extends AbstractSpell
     {
     	super.onServerCastTick(level, spellLevel, entity, playerMagicData);
     	
-    	List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, entity.getBoundingBox().inflate(1.0F));
-    	list.removeIf(t -> t == entity || t.isAlliedTo(entity) || entity.isAlliedTo(t));
+    	List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, entity.getBoundingBox().inflate(1.0F), t -> t != entity && !t.isAlliedTo(entity));
     	list.forEach(t -> 
     	{
     		if(t.hurt(entity.damageSources().indirectMagic(entity, entity), spellLevel * 0.5F))

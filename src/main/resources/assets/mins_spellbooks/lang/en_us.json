@@ -10,5 +10,7 @@
 	"spell.mins_spellbooks.spinning.guide": "spin your self and deal damage to nearby entities",
 	"spell.mins_spellbooks.bouncing_laser": "Bouncing Laser",
 	"spell.mins_spellbooks.bouncing_laser.guide": "shoot a laser that bounce off walls",
+	"spell.mins_spellbooks.morph": "Morph",
+	"spell.mins_spellbooks.morph.guide": "turn your self to targeted mob",
 	"entity.mins_spellbooks.laser_segment": "Laser Segment"
 }

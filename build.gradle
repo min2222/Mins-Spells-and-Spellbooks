@@ -140,9 +140,9 @@ repositories {
 
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html#sub:flat_dir_resolver
-    // flatDir {
-    //     dir 'libs'
-    // }
+    flatDir {
+    	dir 'libs'
+    }
     
     maven {
         name = "Iron's Maven - Release"
@@ -164,7 +164,8 @@ dependencies {
     // then special handling is done to allow a setup of a vanilla dependency without the use of an external repository.
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 	annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
-	implementation fg.deobf("curse.maven:tickrate-api-969702:5950201")
+	implementation fg.deobf("curse.maven:tickrate-api-969702:6542697")
+	implementation fg.deobf("curse.maven:mins-morph-1200634:6604530")
 	
 	compileOnly fg.deobf("io.redspace.ironsspellbooks:irons_spellbooks:${irons_spells_version}")
     runtimeOnly fg.deobf("io.redspace.ironsspellbooks:irons_spellbooks:${irons_spells_version}")

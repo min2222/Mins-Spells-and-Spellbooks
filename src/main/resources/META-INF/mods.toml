@@ -39,7 +39,7 @@ authors="min01" #optional
 #displayTest="MATCH_VERSION" # MATCH_VERSION is the default if nothing is specified (#optional)
 
 # The description text for the mod (multi line!) (#mandatory)
-description='''my one iss addon.'''
+description='''my own iss addon.'''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.mins_spellbooks]] #optional
     # the modid of the dependency
@@ -89,7 +89,7 @@ description='''my one iss addon.'''
 [[dependencies.mins_spellbooks]]
     modId="tickrateapi" #mandatory
     mandatory=true #mandatory
-    versionRange="[1.0.0,)" #mandatory
+    versionRange="[4.0.0,)" #mandatory
     ordering="NONE"
     side="BOTH"
 [[dependencies.mins_spellbooks]]

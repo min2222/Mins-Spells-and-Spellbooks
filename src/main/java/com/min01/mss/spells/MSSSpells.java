@@ -17,6 +17,8 @@ public class MSSSpells
     public static final RegistryObject<AbstractSpell> SPINNING = registerSpell(new SpinningSpell());
     
     public static final RegistryObject<AbstractSpell> BOUNCING_LASER = registerSpell(new BouncingLaserSpell());
+    
+    public static final RegistryObject<AbstractSpell> MORPH = registerSpell(new MorphSpell());
 
     public static RegistryObject<AbstractSpell> registerSpell(AbstractSpell spell)
     {

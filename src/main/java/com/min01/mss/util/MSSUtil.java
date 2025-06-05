@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import org.joml.Math;
 
+import com.min01.tickrateapi.util.TickrateUtil;
+
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -15,6 +17,28 @@ import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 public class MSSUtil 
 {
+	public static void setTickrateWithTime(Entity entity, int tickrate, int time)
+	{
+		TickrateUtil.setTickrate(entity, tickrate);
+		entity.getPersistentData().putInt("ForceTickCount", time);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static Iterable<Entity> getAllEntities(Level level)
+	{
+		Method m = ObfuscationReflectionHelper.findMethod(Level.class, "m_142646_");
+		try 
+		{
+			LevelEntityGetter<Entity> entities = (LevelEntityGetter<Entity>) m.invoke(level);
+			return entities.getAll();
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public static Vec3 fromToVector(Vec3 from, Vec3 to, float scale)
 	{
 		Vec3 motion = to.subtract(from).normalize();
