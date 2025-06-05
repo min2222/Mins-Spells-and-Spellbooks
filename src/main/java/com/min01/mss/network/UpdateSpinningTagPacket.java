@@ -3,7 +3,6 @@ package com.min01.mss.network;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import com.min01.mss.util.MSSClientUtil;
 import com.min01.mss.util.MSSUtil;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -35,10 +34,16 @@ public class UpdateSpinningTagPacket
 		{
 			ctx.get().enqueueWork(() ->
 			{
-				Entity entity = MSSUtil.getEntityByUUID(MSSClientUtil.MC.level, message.entityUUID);
-				if(entity.getPersistentData().contains("Spinning"))
+				if(ctx.get().getDirection().getReceptionSide().isClient())
 				{
-					entity.getPersistentData().remove("Spinning");
+					MSSUtil.getClientLevel(t -> 
+					{
+						Entity entity = MSSUtil.getEntityByUUID(t, message.entityUUID);
+						if(entity.getPersistentData().contains("Spinning"))
+						{
+							entity.getPersistentData().remove("Spinning");
+						}
+					});
 				}
 			});
 

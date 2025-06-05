@@ -2,21 +2,33 @@ package com.min01.mss.util;
 
 import java.lang.reflect.Method;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import org.joml.Math;
 
 import com.min01.tickrateapi.util.TickrateUtil;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.util.LogicalSidedProvider;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
-public class MSSUtil 
+public class MSSUtil
 {
+	public static void getClientLevel(Consumer<Level> consumer)
+	{
+		LogicalSidedProvider.CLIENTWORLD.get(LogicalSide.CLIENT).filter(ClientLevel.class::isInstance).ifPresent(level -> 
+		{
+			consumer.accept(level);
+		});
+	}
+	
 	public static void setTickrateWithTime(Entity entity, int tickrate, int time)
 	{
 		TickrateUtil.setTickrate(entity, tickrate);

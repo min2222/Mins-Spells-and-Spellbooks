@@ -63,12 +63,11 @@ public class SpinningSpell extends AbstractSpell
     @Override
     public void onServerCastComplete(Level level, int spellLevel, LivingEntity entity, MagicData playerMagicData, boolean cancelled) 
     {
+		CompoundTag tag = entity.getPersistentData();
     	if(entity instanceof ServerPlayer player)
     	{
         	MSSNetwork.sendNonLocal(new UpdateSpinningTagPacket(player.getUUID()), player);
     	}
-    	
-		CompoundTag tag = entity.getPersistentData();
 		if(tag.contains("Spinning"))
 		{
 			tag.remove("Spinning");
