@@ -15,8 +15,10 @@ import io.redspace.ironsspellbooks.api.spells.SpellRarity;
 import io.redspace.ironsspellbooks.api.util.Utils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.ClipContext.Fluid;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 @AutoSpellConfig
 public class BouncingLaserSpell extends AbstractSpell
@@ -41,15 +43,14 @@ public class BouncingLaserSpell extends AbstractSpell
     public void onCast(Level level, int spellLevel, LivingEntity entity, CastSource castSource, MagicData playerMagicData) 
     {
     	EntityLaserSegment segment = new EntityLaserSegment(MSSEntities.LASER_SEGMENT.get(), level);
-    	HitResult result = Utils.raycastForEntity(level, entity, 100.0F, true, 0.1F);
-    	segment.setPos(result.getLocation());
-    	segment.shootFromRotation(entity, entity.getXRot(), entity.getYRot(), 0.0F, 5.0F, 0.0F);
+        Vec3 start = entity.getEyePosition();
+        Vec3 end = entity.getLookAngle().normalize().scale(100.0F).add(start);
+    	BlockHitResult hitResult = Utils.raycastForBlock(segment.level, start, end, Fluid.NONE);
+    	segment.setPos(entity.getEyePosition());
+    	segment.setTargetPos(hitResult.getLocation());
+    	segment.setOwner(entity);
     	level.addFreshEntity(segment);
-    	
-    	EntityLaserSegment segment1 = new EntityLaserSegment(MSSEntities.LASER_SEGMENT.get(), level);
-    	segment1.setPos(entity.getEyePosition());
-    	segment1.setOwner(segment);
-    	level.addFreshEntity(segment1);
+		segment.onBlockHit(hitResult);
     	
     	super.onCast(level, spellLevel, entity, castSource, playerMagicData);
     }

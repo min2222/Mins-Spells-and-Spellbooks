@@ -29,12 +29,12 @@ public class LaserSegmentRenderer extends EntityRenderer<EntityLaserSegment>
 	@Override
 	public void render(EntityLaserSegment pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight)
 	{
-		if(pEntity.getOwner() != null)
+		if(!pEntity.getTargetPos().equals(Vec3.ZERO))
 		{
 			pPoseStack.pushPose();
-			Vec3 size = new Vec3(0.1F / 2, 0.1F / 2, pEntity.distanceTo(pEntity.getOwner()));
+			Vec3 size = new Vec3(0.1F / 2, 0.1F / 2, pEntity.position().distanceTo(pEntity.getTargetPos()));
 			AABB aabb = new AABB(size.reverse(), new Vec3(0.1F / 2, 0.1F / 2, 0.0F));
-			Vec2 rot = MSSUtil.lookAt(pEntity.position(), pEntity.getOwner().position());
+			Vec2 rot = MSSUtil.lookAt(pEntity.position(), pEntity.getTargetPos());
 			pPoseStack.mulPose(Axis.ZP.rotationDegrees(180.0F));
 			pPoseStack.mulPose(Axis.YP.rotationDegrees(180.0F + rot.y));
 			pPoseStack.mulPose(Axis.XP.rotationDegrees(rot.x));

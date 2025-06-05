@@ -6,8 +6,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+import com.min01.mss.misc.MSSEntityDataSerializers;
 import com.min01.mss.util.MSSUtil;
 
+import io.redspace.ironsspellbooks.api.util.Utils;
 import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -19,6 +21,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.ClipContext.Fluid;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -28,8 +31,9 @@ import net.minecraft.world.phys.Vec3;
 
 public class EntityLaserSegment extends Projectile
 {
+	public static final EntityDataAccessor<Integer> BOUNCE = SynchedEntityData.defineId(EntityLaserSegment.class, EntityDataSerializers.INT);
 	public static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(EntityLaserSegment.class, EntityDataSerializers.OPTIONAL_UUID);
-	public static final String BOUNCE = "Bounce";
+	public static final EntityDataAccessor<Vec3> TARGET_POS = SynchedEntityData.defineId(EntityLaserSegment.class, MSSEntityDataSerializers.VEC3.get());
 	public static final int MAX_BOUNCE = 10;
 	
 	public EntityLaserSegment(EntityType<? extends Projectile> pEntityType, Level pLevel) 
@@ -54,7 +58,9 @@ public class EntityLaserSegment extends Projectile
 	@Override
 	protected void defineSynchedData() 
 	{
+		this.entityData.define(BOUNCE, 0);
 		this.entityData.define(OWNER_UUID, Optional.empty());
+		this.entityData.define(TARGET_POS, Vec3.ZERO);
 	}
 	
 	@Override
@@ -82,18 +88,17 @@ public class EntityLaserSegment extends Projectile
 			this.onHit(hitResult);
 		}
 		
-    	if(this.getOwner() != null && this.tickCount == 1)
+    	if(!this.getTargetPos().equals(Vec3.ZERO) && this.tickCount == 1 && this.getOwner() != null)
     	{
     		List<LivingEntity> arrayList = new ArrayList<>();
             Vec3 vec3 = this.position();
-            Vec3 vec31 = this.getOwner().position().subtract(vec3);
+            Vec3 vec31 = this.getTargetPos().subtract(vec3);
             Vec3 vec32 = vec31.normalize();
 
-            for(int i = 1; i < Mth.floor(vec31.length()) + this.distanceTo(this.getOwner()); ++i)
+            for(int i = 1; i < Mth.floor(vec31.length()) + this.position().distanceTo(this.getTargetPos()); ++i)
             {
             	Vec3 vec33 = vec3.add(vec32.scale(i));
-            	List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, new AABB(vec33, vec33).inflate(0.1F));
-            	list.removeIf(t -> t == this.getOwner() || t.isAlliedTo(this.getOwner()));
+            	List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, new AABB(vec33, vec33).inflate(0.1F), t -> t != this.getOwner() && !t.isAlliedTo(this.getOwner()));
             	list.forEach(t -> 
             	{
             		if(!arrayList.contains(t))
@@ -105,7 +110,7 @@ public class EntityLaserSegment extends Projectile
             
             arrayList.forEach(t -> 
             {
-        		if(t.hurt(this.damageSources().magic(), this.getPersistentData().getInt(BOUNCE) + 1.0F))
+        		if(t.hurt(this.damageSources().magic(), this.getBounce() + 1.0F))
         		{
         			t.invulnerableTime = 0;
         		}
@@ -148,10 +153,10 @@ public class EntityLaserSegment extends Projectile
 	{
 		super.onHitBlock(pResult);
 		
-	    int bounce = this.getPersistentData().getInt(BOUNCE);
-	    double x = this.getDeltaMovement().x;
-	    double y = this.getDeltaMovement().y;
-	    double z = this.getDeltaMovement().z;
+	    int bounce = this.getBounce();
+	    double x = this.getMovement().x;
+	    double y = this.getMovement().y;
+	    double z = this.getMovement().z;
 
 		Direction direction = pResult.getDirection();
 		
@@ -183,15 +188,29 @@ public class EntityLaserSegment extends Projectile
 		if(bounce < MAX_BOUNCE)
 		{
 			EntityLaserSegment segment = new EntityLaserSegment(MSSEntities.LASER_SEGMENT.get(), this.level);
+			if(this.getOwner() != null)
+			{
+				segment.setOwner(this.getOwner());
+			}
 			Vec3 motion = new Vec3(x, y, z);
-			Vec3 vec3 = this.collide(motion);
-			segment.setPos(pResult.getLocation().add(vec3));
-			segment.setDeltaMovement(motion);
-			segment.getPersistentData().putInt(BOUNCE, bounce + 1);
+			segment.setPos(this.getTargetPos());
+			BlockHitResult hitResult = Utils.raycastForBlock(segment.level, segment.position(), segment.position().add(motion), Fluid.NONE);
+			segment.setTargetPos(hitResult.getLocation());
+			segment.setBounce(bounce + 1);
 			this.level.addFreshEntity(segment);
-			this.setOwner(segment);
-			this.setDeltaMovement(Vec3.ZERO);
+			BlockHitResult hitResult2 = Utils.raycastForBlock(segment.level, segment.position(), segment.getTargetPos(), Fluid.NONE);
+    		segment.onBlockHit(hitResult2);
 		}
+	}
+	
+	public Vec3 getMovement()
+	{
+		return MSSUtil.fromToVector(this.position(), this.getTargetPos(), 20.0F);
+	}
+	
+	public void onBlockHit(BlockHitResult blockHit)
+	{
+		this.onHitBlock(blockHit);
 	}
 	
 	@Override
@@ -214,5 +233,26 @@ public class EntityLaserSegment extends Projectile
 			return MSSUtil.getEntityByUUID(this.level, this.entityData.get(OWNER_UUID).get());
 		}
 		return null;
+	}
+	
+	
+	public void setBounce(int value)
+	{
+		this.entityData.set(BOUNCE, value);
+	}
+	
+	public int getBounce()
+	{
+		return this.entityData.get(BOUNCE);
+	}
+	
+	public void setTargetPos(Vec3 pos)
+	{
+		this.entityData.set(TARGET_POS, pos);
+	}
+	
+	public Vec3 getTargetPos()
+	{
+		return this.entityData.get(TARGET_POS);
 	}
 }
