@@ -9,7 +9,7 @@ public class MSSConfig
 	public static final MSSConfig CONFIG;
 	public static final ForgeConfigSpec CONFIG_SPEC;
 
-	public static ForgeConfigSpec.BooleanValue enableStaffOfTheNinesMagicBypass;
+	public static ForgeConfigSpec.BooleanValue enableStaffOfTheNinesShieldBypass;
 	
     static 
     {
@@ -21,7 +21,7 @@ public class MSSConfig
     public MSSConfig(ForgeConfigSpec.Builder config) 
     {
     	config.push("Settings");
-    	MSSConfig.enableStaffOfTheNinesMagicBypass = config.comment("disable/enable magic bypass for staff of the nines").define("enableStaffOfTheNinesMagicBypass", true);
+    	MSSConfig.enableStaffOfTheNinesShieldBypass = config.comment("disable/enable shield spell bypass for staff of the nines").define("enableStaffOfTheNinesShieldBypass", true);
         config.pop();
     }
 }

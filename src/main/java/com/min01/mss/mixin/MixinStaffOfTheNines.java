@@ -31,7 +31,7 @@ public class MixinStaffOfTheNines
 	@Redirect(at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/api/util/Utils;raycastForEntity(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/Entity;FZF)Lnet/minecraft/world/phys/HitResult;"), method = "use", remap = false)
 	public HitResult use(Level level, Entity originEntity, float distance, boolean checkForBlocks, float bbInflation)
 	{
-		if(MSSConfig.enableStaffOfTheNinesMagicBypass.get())
+		if(MSSConfig.enableStaffOfTheNinesShieldBypass.get())
 		{
 			return raycastForEntity(level, originEntity, distance, checkForBlocks, bbInflation);
 		}
