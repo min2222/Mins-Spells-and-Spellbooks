@@ -28,8 +28,8 @@ import net.minecraft.world.phys.Vec3;
 @Mixin(StaffOfTheNines.class)
 public class MixinStaffOfTheNines
 {
-	@Redirect(at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/api/util/Utils;raycastForEntity(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/Entity;FZF)Lnet/minecraft/world/phys/HitResult;"), method = "use", remap = false)
-	public HitResult use(Level level, Entity originEntity, float distance, boolean checkForBlocks, float bbInflation)
+	@Redirect(at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/api/util/Utils;raycastForEntity(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/Entity;FZF)Lnet/minecraft/world/phys/HitResult;"), method = "use")
+	private HitResult use(Level level, Entity originEntity, float distance, boolean checkForBlocks, float bbInflation)
 	{
 		if(MSSConfig.enableStaffOfTheNinesShieldBypass.get())
 		{
