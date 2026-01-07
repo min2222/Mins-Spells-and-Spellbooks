@@ -10,7 +10,6 @@ import com.min01.mss.network.UpdateSpinningTagPacket;
 import io.redspace.ironsspellbooks.api.config.DefaultConfig;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
-import io.redspace.ironsspellbooks.api.spells.AutoSpellConfig;
 import io.redspace.ironsspellbooks.api.spells.CastSource;
 import io.redspace.ironsspellbooks.api.spells.CastType;
 import io.redspace.ironsspellbooks.api.spells.ICastData;
@@ -21,10 +20,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
-@AutoSpellConfig
 public class SpinningSpell extends AbstractSpell
 {
-    private final ResourceLocation spellId = new ResourceLocation(MinsSpellbooks.MODID, "spinning");
+    private final ResourceLocation spellId = ResourceLocation.fromNamespaceAndPath(MinsSpellbooks.MODID, "spinning");
     
     private final DefaultConfig defaultConfig = new DefaultConfig()
             .setMinRarity(SpellRarity.EPIC)

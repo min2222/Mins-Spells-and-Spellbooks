@@ -81,12 +81,6 @@ description='''my own iss addon.'''
     ordering="NONE"
     side="BOTH"
 [[dependencies.mins_spellbooks]]
-    modId="caelus" #mandatory
-    mandatory=true #mandatory
-    versionRange="[3.1.0+1.20,)" #mandatory
-    ordering="NONE"
-    side="BOTH"
-[[dependencies.mins_spellbooks]]
     modId="tickrateapi" #mandatory
     mandatory=true #mandatory
     versionRange="[4.0.0,)" #mandatory

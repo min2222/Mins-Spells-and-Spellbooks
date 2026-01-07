@@ -5,12 +5,12 @@
 	"spell.mins_spellbooks.disorganization": "Disorganization",
 	"spell.mins_spellbooks.disorganization.guide": "disorganize target player's inventory",
 	"spell.mins_spellbooks.fatten": "Fatten",
-	"spell.mins_spellbooks.fatten.guide": "make target thick",
+	"spell.mins_spellbooks.fatten.guide": "make target thick (shift cast for shrink(?) back)",
 	"spell.mins_spellbooks.spinning": "Spinning",
 	"spell.mins_spellbooks.spinning.guide": "spin your self and deal damage to nearby entities",
 	"spell.mins_spellbooks.bouncing_laser": "Bouncing Laser",
 	"spell.mins_spellbooks.bouncing_laser.guide": "shoot a laser that bounce off walls, each bounce increase damage of laser",
 	"spell.mins_spellbooks.morph": "Morph",
-	"spell.mins_spellbooks.morph.guide": "turn your self to targeted mob",
+	"spell.mins_spellbooks.morph.guide": "turn your self to targeted mob (shift cast for return to player)",
 	"entity.mins_spellbooks.laser_segment": "Laser Segment"
 }

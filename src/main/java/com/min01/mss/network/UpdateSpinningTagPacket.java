@@ -18,37 +18,33 @@ public class UpdateSpinningTagPacket
 		this.entityUUID = entityUUID;
 	}
 
-	public UpdateSpinningTagPacket(FriendlyByteBuf buf)
+	public static UpdateSpinningTagPacket read(FriendlyByteBuf buf)
 	{
-		this.entityUUID = buf.readUUID();
+		return new UpdateSpinningTagPacket(buf.readUUID());
 	}
 
-	public void encode(FriendlyByteBuf buf)
+	public void write(FriendlyByteBuf buf)
 	{
 		buf.writeUUID(this.entityUUID);
 	}
 	
-	public static class Handler 
+	public static boolean handle(UpdateSpinningTagPacket message, Supplier<NetworkEvent.Context> ctx) 
 	{
-		public static boolean onMessage(UpdateSpinningTagPacket message, Supplier<NetworkEvent.Context> ctx) 
+		ctx.get().enqueueWork(() ->
 		{
-			ctx.get().enqueueWork(() ->
+			if(ctx.get().getDirection().getReceptionSide().isClient())
 			{
-				if(ctx.get().getDirection().getReceptionSide().isClient())
+				MSSUtil.getClientLevel(t -> 
 				{
-					MSSUtil.getClientLevel(t -> 
+					Entity entity = MSSUtil.getEntityByUUID(t, message.entityUUID);
+					if(entity.getPersistentData().contains("Spinning"))
 					{
-						Entity entity = MSSUtil.getEntityByUUID(t, message.entityUUID);
-						if(entity.getPersistentData().contains("Spinning"))
-						{
-							entity.getPersistentData().remove("Spinning");
-						}
-					});
-				}
-			});
-
-			ctx.get().setPacketHandled(true);
-			return true;
-		}
+						entity.getPersistentData().remove("Spinning");
+					}
+				});
+			}
+		});
+		ctx.get().setPacketHandled(true);
+		return true;
 	}
 }

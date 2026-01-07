@@ -9,7 +9,6 @@ import com.min01.mss.network.MSSNetwork;
 import com.min01.mss.spells.MSSSpells;
 
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -19,10 +18,9 @@ public class MinsSpellbooks
 {
 	public static final String MODID = "mins_spellbooks";
 	
-	public MinsSpellbooks() 
+	public MinsSpellbooks(FMLJavaModLoadingContext ctx) 
 	{
-		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-		ModLoadingContext ctx = ModLoadingContext.get();
+		IEventBus bus = ctx.getModEventBus();
 		MSSSpells.SPELLS.register(bus);
 		MSSSchools.SCHOOLS.register(bus);
 		MSSAttributes.ATTRIBUTES.register(bus);

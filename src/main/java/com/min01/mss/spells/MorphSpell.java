@@ -1,28 +1,27 @@
 package com.min01.mss.spells;
 
 import com.min01.morph.capabilities.MorphCapabilities;
+import com.min01.morph.util.MorphUtil;
 import com.min01.mss.MinsSpellbooks;
 
 import io.redspace.ironsspellbooks.api.config.DefaultConfig;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.api.registry.SchoolRegistry;
-import io.redspace.ironsspellbooks.api.spells.AutoSpellConfig;
+import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
 import io.redspace.ironsspellbooks.api.spells.CastSource;
 import io.redspace.ironsspellbooks.api.spells.CastType;
 import io.redspace.ironsspellbooks.api.spells.SpellRarity;
 import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.capabilities.magic.TargetEntityCastData;
-import io.redspace.ironsspellbooks.spells.eldritch.AbstractEldritchSpell;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-@AutoSpellConfig
-public class MorphSpell extends AbstractEldritchSpell
+public class MorphSpell extends AbstractSpell
 {
-    private final ResourceLocation spellId = new ResourceLocation(MinsSpellbooks.MODID, "morph");
+    private final ResourceLocation spellId = ResourceLocation.fromNamespaceAndPath(MinsSpellbooks.MODID, "morph");
     
     private final DefaultConfig defaultConfig = new DefaultConfig()
             .setMinRarity(SpellRarity.LEGENDARY)
@@ -43,6 +42,10 @@ public class MorphSpell extends AbstractEldritchSpell
     @Override
     public boolean checkPreCastConditions(Level level, int spellLevel, LivingEntity entity, MagicData playerMagicData) 
     {
+    	if(entity.isShiftKeyDown())
+    	{
+    		return true;
+    	}
     	return Utils.preCastTargetHelper(level, entity, playerMagicData, this, 32, 0.35F);
     }
     
@@ -61,6 +64,10 @@ public class MorphSpell extends AbstractEldritchSpell
 					entity.setHealth(morph.getMaxHealth());
     			});
             }
+        }
+        else
+        {
+        	MorphUtil.removeMorph(entity);
         }
     	super.onCast(level, spellLevel, entity, castSource, playerMagicData);
     }

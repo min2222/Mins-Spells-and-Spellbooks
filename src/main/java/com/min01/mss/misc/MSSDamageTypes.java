@@ -13,6 +13,6 @@ public class MSSDamageTypes
     
     public static ResourceKey<DamageType> registerDamageType(String name) 
     {
-        return ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(MinsSpellbooks.MODID, name));
+        return ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath(MinsSpellbooks.MODID, name));
     }
 }

@@ -12,7 +12,7 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 public class MSSNetwork
 {
 	private static final String PROTOCOL_VERSION = "1";
-	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(MinsSpellbooks.MODID, "mins_spellbooks"),
+	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(ResourceLocation.fromNamespaceAndPath(MinsSpellbooks.MODID, MinsSpellbooks.MODID),
 			() -> PROTOCOL_VERSION,
 			PROTOCOL_VERSION::equals,
 			PROTOCOL_VERSION::equals
@@ -21,7 +21,7 @@ public class MSSNetwork
 	public static int ID = 0;
 	public static void registerMessages()
 	{
-		CHANNEL.registerMessage(ID++, UpdateSpinningTagPacket.class, UpdateSpinningTagPacket::encode, UpdateSpinningTagPacket::new, UpdateSpinningTagPacket.Handler::onMessage);
+		CHANNEL.registerMessage(ID++, UpdateSpinningTagPacket.class, UpdateSpinningTagPacket::write, UpdateSpinningTagPacket::read, UpdateSpinningTagPacket::handle);
 	}
 	
     public static <MSG> void sendToServer(MSG message) 

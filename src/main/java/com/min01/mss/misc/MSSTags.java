@@ -9,5 +9,5 @@ import net.minecraft.world.item.Item;
 
 public class MSSTags
 {
-    public static final TagKey<Item> TROLL_FOCUS = ItemTags.create(new ResourceLocation(MinsSpellbooks.MODID, "troll_focus"));
+    public static final TagKey<Item> TROLL_FOCUS = ItemTags.create(ResourceLocation.fromNamespaceAndPath(MinsSpellbooks.MODID, "troll_focus"));
 }

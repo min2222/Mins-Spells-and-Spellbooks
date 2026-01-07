@@ -1,4 +1,3 @@
-
 buildscript {
     repositories {
         maven { url = 'https://maven.minecraftforge.net' }
@@ -31,7 +30,6 @@ base {
 
 mixin {
     add sourceSets.main, "mss.refmap.json"
-
     config "mss.mixin.json"
 }
 
@@ -140,20 +138,50 @@ repositories {
 
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html#sub:flat_dir_resolver
-    flatDir {
-    	dir 'libs'
-    }
-    
-    maven {
-        name = "Iron's Maven - Release"
-        url = "https://code.redspace.io/releases"
+    // flatDir {
+    //     dir 'libs'
+    // }
+	
+	maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
     }
 	
-	maven { url = "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/" }
-    maven { url = "https://maven.theillusivec4.top" }
-    maven { url = "https://cursemaven.com" }
-    maven { url = "https://maven.blamejared.com" }
-    maven { url = "https://maven.kosmx.dev/" }
+	maven {
+	  	name = "Iron's Maven - Release"
+	  	url "https://code.redspace.io/releases"
+	}
+    
+	maven {
+	    name = "Illusive Soulworks maven"
+	    url = "https://maven.theillusivec4.top/"
+	}
+	
+	maven {
+		name = 'GeckoLib'
+	    url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+	    content {
+			includeGroupByRegex("software\\.bernie.*")
+			includeGroup("com.eliotlash.mclib")
+	    }
+	}
+	
+  	maven {
+    	name = "Jared's maven"
+    	url = "https://maven.blamejared.com/"
+  	}
+  	
+  	maven {
+    	name = "ModMaven"
+    	url = "https://modmaven.dev"
+  	}
+  	
+  	maven {
+        name "KosmX's maven"
+        url 'https://maven.kosmx.dev/'
+    }
 }
 
 dependencies {
@@ -164,29 +192,26 @@ dependencies {
     // then special handling is done to allow a setup of a vanilla dependency without the use of an external repository.
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 	annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
-	implementation fg.deobf("curse.maven:tickrate-api-969702:6542697")
-	implementation fg.deobf("curse.maven:mins-morph-1200634:6604530")
 	
-	compileOnly fg.deobf("io.redspace.ironsspellbooks:irons_spellbooks:${irons_spells_version}")
-    runtimeOnly fg.deobf("io.redspace.ironsspellbooks:irons_spellbooks:${irons_spells_version}")
+	implementation fg.deobf("curse.maven:tickrate-api-969702:7105256")
+	implementation fg.deobf("curse.maven:mins-morph-1200634:7208683")
 	
-	implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${geckolib_version}")
-	implementation("com.eliotlash.mclib:mclib:20")
-
-    compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:${caelus_version}:api")
-    runtimeOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:${caelus_version}")
+    compileOnly fg.deobf("io.redspace:irons_spellbooks:${irons_spells_version}")
+    runtimeOnly fg.deobf("io.redspace:irons_spellbooks:${irons_spells_version}")
+	
+	implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
+    implementation("com.eliotlash.mclib:mclib:20")
 
     implementation fg.deobf("dev.kosmx.player-anim:player-animation-lib-forge:${player_animator_version}")
 	
-	compileOnly fg.deobf("mezz.jei:jei-${jei_mc_version}-common-api:${jei_version}")
-    compileOnly fg.deobf("mezz.jei:jei-${jei_mc_version}-forge-api:${jei_version}")
-    runtimeOnly fg.deobf("mezz.jei:jei-${jei_mc_version}-forge:${jei_version}")
+	compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
+	runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
 	
-    implementation fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
+    compileOnly(fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api"))
+    runtimeOnly(fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}"))
 	
 	implementation "com.google.code.gson:gson:${gson_version}"
-
+	
     // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")

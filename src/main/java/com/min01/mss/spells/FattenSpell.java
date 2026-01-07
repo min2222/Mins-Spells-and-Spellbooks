@@ -9,15 +9,15 @@ import com.min01.mss.misc.MSSTargetEntityCastData;
 import io.redspace.ironsspellbooks.api.config.DefaultConfig;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
-import io.redspace.ironsspellbooks.api.spells.AutoSpellConfig;
 import io.redspace.ironsspellbooks.api.spells.CastSource;
 import io.redspace.ironsspellbooks.api.spells.CastType;
 import io.redspace.ironsspellbooks.api.spells.ICastData;
 import io.redspace.ironsspellbooks.api.spells.ICastDataSerializable;
 import io.redspace.ironsspellbooks.api.spells.SpellRarity;
 import io.redspace.ironsspellbooks.api.util.Utils;
-import io.redspace.ironsspellbooks.network.spell.ClientboundSyncTargetingData;
-import io.redspace.ironsspellbooks.setup.Messages;
+import io.redspace.ironsspellbooks.entity.spells.root.PreventDismount;
+import io.redspace.ironsspellbooks.network.casting.SyncTargetingDataPacket;
+import io.redspace.ironsspellbooks.setup.PacketDistributor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -27,12 +27,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.entity.PartEntity;
 
-@AutoSpellConfig
 public class FattenSpell extends AbstractSpell
 {
-    private final ResourceLocation spellId = new ResourceLocation(MinsSpellbooks.MODID, "fatten");
+    private final ResourceLocation spellId = ResourceLocation.fromNamespaceAndPath(MinsSpellbooks.MODID, "fatten");
     
     private final DefaultConfig defaultConfig = new DefaultConfig()
             .setMinRarity(SpellRarity.RARE)
@@ -56,31 +55,51 @@ public class FattenSpell extends AbstractSpell
         return preCastTargetHelper(level, entity, playerMagicData, this, 10, 0.1F, true, t -> true);
     }
     
-    //copied from Utils;
-    public static boolean preCastTargetHelper(Level level, LivingEntity caster, MagicData playerMagicData, AbstractSpell spell, int range, float aimAssist, boolean sendFailureMessage, Predicate<LivingEntity> filter)
+    //copied from Utils
+    public static boolean preCastTargetHelper(Level level, LivingEntity caster, MagicData playerMagicData, AbstractSpell spell, int range, float aimAssist, boolean sendFailureMessage, Predicate<LivingEntity> filter) 
     {
-    	HitResult target = Utils.raycastForEntity(caster.level, caster, range, true, aimAssist);
-    	if(target instanceof EntityHitResult entityHit && entityHit.getEntity() instanceof LivingEntity livingTarget && filter.test(livingTarget)) 
-    	{
-    		MSSTargetEntityCastData data = new MSSTargetEntityCastData();
-    		data.setTarget(livingTarget);
-    		playerMagicData.setAdditionalCastData(data);
-    		if(caster instanceof ServerPlayer serverPlayer) 
-    		{
-    			if(spell.getCastType() != CastType.INSTANT) 
-    			{
-    				Messages.sendToPlayer(new ClientboundSyncTargetingData(livingTarget, spell), serverPlayer);
-    			}
-    			serverPlayer.connection.send(new ClientboundSetActionBarTextPacket(Component.translatable("ui.irons_spellbooks.spell_target_success", livingTarget.getDisplayName().getString(), spell.getDisplayName(serverPlayer)).withStyle(ChatFormatting.GREEN)));
-    		}
-    		if(livingTarget instanceof ServerPlayer serverPlayer) 
-    		{
+        var target = Utils.raycastForEntity(caster.level, caster, range, true, aimAssist);
+        LivingEntity livingTarget = null;
+        if(target instanceof EntityHitResult entityHit)
+        {
+            if(entityHit.getEntity() instanceof LivingEntity livingEntity && filter.test(livingEntity)) 
+            {
+                livingTarget = livingEntity;
+            }
+            else if (entityHit.getEntity() instanceof PartEntity<?> partEntity && partEntity.getParent() instanceof LivingEntity livingParent && !caster.equals(livingParent) && filter.test(livingParent)) 
+            {
+            	livingTarget = livingParent;
+            } 
+            else if(entityHit.getEntity() instanceof PreventDismount) 
+            {
+                if(entityHit.getEntity().getFirstPassenger() instanceof LivingEntity livingRooted) 
+                {
+                    livingTarget = livingRooted;
+                }
+            }
+        }
+
+        if(livingTarget != null) 
+        {
+        	MSSTargetEntityCastData data = new MSSTargetEntityCastData();
+        	data.setTarget(livingTarget);
+            playerMagicData.setAdditionalCastData(data);
+            if(caster instanceof ServerPlayer serverPlayer) 
+            {
+                if(spell.getCastType() != CastType.INSTANT)
+                {
+                    PacketDistributor.sendToPlayer(serverPlayer, new SyncTargetingDataPacket(livingTarget, spell));
+                }
+                serverPlayer.connection.send(new ClientboundSetActionBarTextPacket(Component.translatable("ui.irons_spellbooks.spell_target_success", livingTarget.getDisplayName().getString(), spell.getDisplayName(serverPlayer)).withStyle(ChatFormatting.GREEN)));
+            }
+            if(livingTarget instanceof ServerPlayer serverPlayer) 
+            {
                 Utils.sendTargetedNotification(serverPlayer, caster, spell);
             }
             return true;
-        }
-    	else if(sendFailureMessage && caster instanceof ServerPlayer serverPlayer)
-    	{
+        } 
+        else if(sendFailureMessage && caster instanceof ServerPlayer serverPlayer)
+        {
             serverPlayer.connection.send(new ClientboundSetActionBarTextPacket(Component.translatable("ui.irons_spellbooks.cast_error_target").withStyle(ChatFormatting.RED)));
         }
         return false;
@@ -93,8 +112,18 @@ public class FattenSpell extends AbstractSpell
         {
         	LivingEntity targetEntity = targetData.getTarget(level);
     		CompoundTag tag = targetEntity.getPersistentData();
-    		tag.putBoolean("Fatten", true);
-        	tag.putFloat("FattenRender", tag.getFloat("FattenRender") + 1.0F);
+    		float fattenRender = tag.getFloat("FattenRender");
+    		float fattenSize = tag.getFloat("FattenSize");
+    		if(entity.isShiftKeyDown())
+    		{
+            	tag.putFloat("FattenRender", Math.max(fattenRender - 1.0F, 0.0F));
+            	tag.putFloat("FattenSize", Math.max(fattenSize - 1.0F, 1.0F));
+    		}
+    		else
+    		{
+            	tag.putFloat("FattenRender", Math.min(fattenRender + 1.0F, spellLevel));
+            	tag.putFloat("FattenSize", Math.min(fattenSize + 1.0F, spellLevel));
+    		}
         	targetEntity.refreshDimensions();
         }
     	
@@ -113,7 +142,18 @@ public class FattenSpell extends AbstractSpell
         if(playerMagicData.getAdditionalCastData() instanceof MSSTargetEntityCastData targetData)
         {
             LivingEntity targetEntity = targetData.getTarget(level);
-            targetEntity.getPersistentData().putBoolean("Fatten", true);
+    		CompoundTag tag = targetEntity.getPersistentData();
+    		float fattenSize = tag.getFloat("FattenSize");
+    		fattenSize = Math.max(fattenSize, 1.0F);
+    		if(entity.isShiftKeyDown())
+    		{
+            	tag.putFloat("FattenSize", Math.max(fattenSize - 1.0F, 0.0F));
+            	tag.putBoolean("Shrink", true);
+    		}
+    		else
+    		{
+            	tag.putFloat("FattenSize", Math.min(fattenSize + 1.0F, spellLevel));
+    		}
             targetEntity.refreshDimensions();
         }
         

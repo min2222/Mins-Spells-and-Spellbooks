@@ -20,10 +20,19 @@ public class EventHandlerForge
     public static void onEntitySize(EntityEvent.Size event)
     {
     	Entity entity = event.getEntity();
-    	if(entity.getPersistentData().contains("Fatten"))
+    	if(entity.getPersistentData().contains("FattenSize"))
     	{
-    		event.setNewSize(EntityDimensions.fixed(entity.getBbWidth() * 2.0F, entity.getBbHeight()));
-    		entity.getPersistentData().remove("Fatten");
+    		float size = entity.getPersistentData().getFloat("FattenSize");
+    		if(entity.getPersistentData().getBoolean("Shrink"))
+    		{
+        		event.setNewSize(EntityDimensions.fixed(entity.getBbWidth() - size, entity.getBbHeight()));
+    		}
+    		else
+    		{
+        		event.setNewSize(EntityDimensions.fixed(entity.getBbWidth() + size, entity.getBbHeight()));
+    		}
+    		entity.getPersistentData().remove("FattenSize");
+    		entity.getPersistentData().remove("Shrink");
     	}
     }
     

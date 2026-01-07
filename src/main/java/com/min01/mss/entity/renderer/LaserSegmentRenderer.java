@@ -19,7 +19,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class LaserSegmentRenderer extends EntityRenderer<EntityLaserSegment>
 {
-    public static final ResourceLocation WHITE_TEXTURE = new ResourceLocation(MinsSpellbooks.MODID, "textures/misc/white.png");
+    public static final ResourceLocation WHITE_TEXTURE = ResourceLocation.fromNamespaceAndPath(MinsSpellbooks.MODID, "textures/misc/white.png");
     
 	public LaserSegmentRenderer(Context pContext)
 	{
