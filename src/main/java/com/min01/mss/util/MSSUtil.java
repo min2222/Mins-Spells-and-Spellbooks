@@ -21,6 +21,8 @@ import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 public class MSSUtil
 {
+	public static final Method GET_ENTITY = ObfuscationReflectionHelper.findMethod(Level.class, "m_142646_");
+	
 	public static void getClientLevel(Consumer<Level> consumer)
 	{
 		LogicalSidedProvider.CLIENTWORLD.get(LogicalSide.CLIENT).filter(ClientLevel.class::isInstance).ifPresent(level -> 
@@ -38,10 +40,9 @@ public class MSSUtil
 	@SuppressWarnings("unchecked")
 	public static Iterable<Entity> getAllEntities(Level level)
 	{
-		Method m = ObfuscationReflectionHelper.findMethod(Level.class, "m_142646_");
 		try 
 		{
-			LevelEntityGetter<Entity> entities = (LevelEntityGetter<Entity>) m.invoke(level);
+			LevelEntityGetter<Entity> entities = (LevelEntityGetter<Entity>) GET_ENTITY.invoke(level);
 			return entities.getAll();
 		}
 		catch (Exception e) 

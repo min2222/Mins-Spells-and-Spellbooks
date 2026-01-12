@@ -1,6 +1,5 @@
 package com.min01.mss.event;
 
-import com.google.common.collect.Lists;
 import com.min01.mss.MinsSpellbooks;
 import com.min01.mss.util.MSSUtil;
 import com.min01.tickrateapi.util.TickrateUtil;
@@ -40,15 +39,22 @@ public class EventHandlerForge
 	public static void onLevelTick(LevelTickEvent event)
 	{
 		Iterable<Entity> all = MSSUtil.getAllEntities(event.level);
-		Lists.newArrayList(all).stream().filter(t -> t.getPersistentData().contains("ForceTickCount")).forEach(t -> 
+		for(Entity entity : all)
 		{
-			int time = t.getPersistentData().getInt("ForceTickCount");
-			t.getPersistentData().putInt("ForceTickCount", time - 1);
+			if(!entity.getPersistentData().contains("ForceTickCount"))
+			{
+				continue;
+			}
+			int time = entity.getPersistentData().getInt("ForceTickCount");
 			if(time <= 0)
 			{
-				TickrateUtil.resetTickrate(t);
-				t.getPersistentData().remove("ForceTickCount");
+				TickrateUtil.resetTickrate(entity);
+				entity.getPersistentData().remove("ForceTickCount");
 			}
-		});
+			else
+			{
+				entity.getPersistentData().putInt("ForceTickCount", time - 1);
+			}
+		}
 	}
 }
