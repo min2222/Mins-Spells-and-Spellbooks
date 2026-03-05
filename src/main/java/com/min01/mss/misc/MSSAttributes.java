@@ -12,8 +12,8 @@ public class MSSAttributes
 {
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES, MinsSpellbooks.MODID);
     
-    public static final RegistryObject<Attribute> TROLL_MAGIC_RESIST = newResistanceAttribute("troll");
-    public static final RegistryObject<Attribute> TROLL_SPELL_POWER = newPowerAttribute("troll");
+    public static final RegistryObject<Attribute> EXTRA_MAGIC_RESIST = newResistanceAttribute("extra");
+    public static final RegistryObject<Attribute> EXTRA_SPELL_POWER = newPowerAttribute("extra");
     
     public static RegistryObject<Attribute> newResistanceAttribute(String id) 
     {

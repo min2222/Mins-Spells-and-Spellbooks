@@ -14,7 +14,7 @@ public class MSSEntityDataSerializers
 {
 	public static final DeferredRegister<EntityDataSerializer<?>> SERIALIZERS = DeferredRegister.create(ForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS, MinsSpellbooks.MODID);
 	
-	public static final RegistryObject<EntityDataSerializer<Vec3>> VEC3 = SERIALIZERS.register("serializer_vec3", () -> EntityDataSerializer.simple(MSSEntityDataSerializers::writeVec3, MSSEntityDataSerializers::readVec3));
+	public static final RegistryObject<EntityDataSerializer<Vec3>> VEC3 = SERIALIZERS.register("vec3", () -> EntityDataSerializer.simple(MSSEntityDataSerializers::writeVec3, MSSEntityDataSerializers::readVec3));
 
 	public static ByteBuf writeVec3(FriendlyByteBuf buf, Vec3 vec)
 	{

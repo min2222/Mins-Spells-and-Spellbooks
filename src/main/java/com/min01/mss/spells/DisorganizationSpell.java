@@ -13,8 +13,8 @@ import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.capabilities.magic.TargetEntityCastData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -24,17 +24,16 @@ public class DisorganizationSpell extends AbstractSpell
     private final ResourceLocation spellId = ResourceLocation.fromNamespaceAndPath(MinsSpellbooks.MODID, "disorganization");
     
     private final DefaultConfig defaultConfig = new DefaultConfig()
-            .setMinRarity(SpellRarity.COMMON)
-            .setSchoolResource(MSSSchools.TROLL_RESOURCE)
+            .setMinRarity(SpellRarity.LEGENDARY)
+            .setSchoolResource(MSSSchools.EXTRA_SCHOOL)
             .setMaxLevel(1)
-            .setCooldownSeconds(30)
+            .setCooldownSeconds(120)
             .build();
 
     public DisorganizationSpell() 
     {
-        this.baseSpellPower = 1;
-        this.spellPowerPerLevel = 1;
-        this.baseManaCost = 30;
+        this.baseManaCost = 200;
+        this.castTime = 200;
     }
     
     @Override
@@ -64,19 +63,16 @@ public class DisorganizationSpell extends AbstractSpell
     
     public void disorganization(Level level, Player player)
     {
-        int inventoryHalf = player.getInventory().items.size() / 2;
+    	Inventory inventory = player.getInventory();
+        int inventoryHalf = inventory.getContainerSize() / 2;
         for(int i = 0; i < inventoryHalf; i++)
         {
             int slot = level.random.nextInt(inventoryHalf);
-            ItemStack swapStack = player.getInventory().items.get(i);
-            player.getInventory().items.set(i, player.getInventory().items.get(inventoryHalf + slot));
-            player.getInventory().items.set(inventoryHalf + slot, swapStack);
+            ItemStack swapStack = inventory.getItem(i);
+            inventory.setItem(i, inventory.getItem(inventoryHalf + slot));
+            inventory.setItem(inventoryHalf + slot, swapStack);
         }
-        int slot2 = level.random.nextInt(player.getInventory().items.size());
-        ItemStack swapStack2 = player.getInventory().items.get(slot2);
-        player.getInventory().items.set(slot2, player.getOffhandItem());
-        player.setItemInHand(InteractionHand.OFF_HAND, swapStack2);
-        player.getInventory().setChanged();
+        inventory.setChanged();
     }
     
 	@Override
@@ -94,6 +90,6 @@ public class DisorganizationSpell extends AbstractSpell
 	@Override
 	public CastType getCastType() 
 	{
-		return CastType.INSTANT;
+		return CastType.LONG;
 	}
 }

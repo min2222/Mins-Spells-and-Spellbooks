@@ -11,15 +11,14 @@ public class MSSSpells
 {
     public static final DeferredRegister<AbstractSpell> SPELLS = DeferredRegister.create(SpellRegistry.SPELL_REGISTRY_KEY, MinsSpellbooks.MODID);
 
-    //Troll
+    //Extra
     public static final RegistryObject<AbstractSpell> DISORGANIZATION = registerSpell(new DisorganizationSpell());
-    public static final RegistryObject<AbstractSpell> FATTEN = registerSpell(new FattenSpell());
     public static final RegistryObject<AbstractSpell> SPINNING = registerSpell(new SpinningSpell());
+    public static final RegistryObject<AbstractSpell> DODGE = registerSpell(new DodgeSpell());
     
+    //Lightning
     public static final RegistryObject<AbstractSpell> BOUNCING_LASER = registerSpell(new BouncingLaserSpell());
     
-    public static final RegistryObject<AbstractSpell> MORPH = registerSpell(new MorphSpell());
-
     public static RegistryObject<AbstractSpell> registerSpell(AbstractSpell spell)
     {
         return SPELLS.register(spell.getSpellName(), () -> spell);

@@ -15,8 +15,8 @@ public class EventHandler
     {
         event.getTypes().forEach(entity -> 
         {
-            event.add(entity, MSSAttributes.TROLL_MAGIC_RESIST.get());
-            event.add(entity, MSSAttributes.TROLL_SPELL_POWER.get());
+            event.add(entity, MSSAttributes.EXTRA_MAGIC_RESIST.get());
+            event.add(entity, MSSAttributes.EXTRA_SPELL_POWER.get());
         });
     }
 }

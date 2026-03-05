@@ -15,16 +15,16 @@ public class MSSSchools
 {
     public static final DeferredRegister<SchoolType> SCHOOLS = DeferredRegister.create(SchoolRegistry.SCHOOL_REGISTRY_KEY, MinsSpellbooks.MODID);
 
-    public static final ResourceLocation TROLL_RESOURCE = ResourceLocation.fromNamespaceAndPath(MinsSpellbooks.MODID, "troll");
+    public static final ResourceLocation EXTRA_SCHOOL = ResourceLocation.fromNamespaceAndPath(MinsSpellbooks.MODID, "extra");
     
-    public static final RegistryObject<SchoolType> TROLL = registerSchool(new SchoolType(
-            TROLL_RESOURCE,
-            MSSTags.TROLL_FOCUS,
-            Component.translatable("school.mins_spellbooks.troll").withStyle(ChatFormatting.WHITE),
-            () -> MSSAttributes.TROLL_SPELL_POWER.get(),
-            () -> MSSAttributes.TROLL_MAGIC_RESIST.get(),
+    public static final RegistryObject<SchoolType> EXTRA = registerSchool(new SchoolType(
+    		EXTRA_SCHOOL,
+            MSSTags.EXTRA_FOCUS,
+            Component.translatable("school.mins_spellbooks.extra").withStyle(ChatFormatting.WHITE),
+            () -> MSSAttributes.EXTRA_SPELL_POWER.get(),
+            () -> MSSAttributes.EXTRA_MAGIC_RESIST.get(),
             () -> SoundRegistry.HOLY_CAST.get(),
-            MSSDamageTypes.TROLL_MAGIC));
+            MSSDamageTypes.EXTRA_MAGIC));
     
     public static RegistryObject<SchoolType> registerSchool(SchoolType schoolType)
     {

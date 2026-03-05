@@ -9,7 +9,7 @@ import net.minecraft.world.damagesource.DamageType;
 
 public class MSSDamageTypes
 {
-    public static final ResourceKey<DamageType> TROLL_MAGIC = registerDamageType("troll_magic");
+    public static final ResourceKey<DamageType> EXTRA_MAGIC = registerDamageType("extra_magic");
     
     public static ResourceKey<DamageType> registerDamageType(String name) 
     {

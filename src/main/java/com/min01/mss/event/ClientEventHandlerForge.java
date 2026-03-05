@@ -18,11 +18,6 @@ public class ClientEventHandlerForge
 	{
 		LivingEntity entity = event.getEntity();
 		CompoundTag tag = entity.getPersistentData();
-		if(tag.contains("FattenRender"))
-		{
-			float scale = tag.getFloat("FattenRender");
-			event.getPoseStack().scale(1.0F + scale, 1.0F, 1.0F + scale);
-		}
 		if(tag.contains("Spinning"))
 		{
 			event.getPoseStack().mulPose(Axis.YP.rotationDegrees((entity.tickCount + event.getPartialTick()) * -75.0F));

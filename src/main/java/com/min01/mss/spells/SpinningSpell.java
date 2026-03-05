@@ -19,6 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public class SpinningSpell extends AbstractSpell
 {
@@ -26,18 +27,16 @@ public class SpinningSpell extends AbstractSpell
     
     private final DefaultConfig defaultConfig = new DefaultConfig()
             .setMinRarity(SpellRarity.EPIC)
-            .setSchoolResource(MSSSchools.TROLL_RESOURCE)
+            .setSchoolResource(MSSSchools.EXTRA_SCHOOL)
             .setMaxLevel(5)
             .setCooldownSeconds(30)
             .build();
 
     public SpinningSpell() 
     {
-        this.manaCostPerLevel = 5;
-        this.baseSpellPower = 1;
-        this.spellPowerPerLevel = 1;
-        this.castTime = 100;
         this.baseManaCost = 10;
+        this.manaCostPerLevel = 5;
+        this.castTime = 100;
     }
     
     @Override
@@ -66,6 +65,7 @@ public class SpinningSpell extends AbstractSpell
     	{
         	MSSNetwork.sendNonLocal(new UpdateSpinningTagPacket(player.getUUID()), player);
     	}
+    	
 		if(tag.contains("Spinning"))
 		{
 			tag.remove("Spinning");
@@ -79,12 +79,14 @@ public class SpinningSpell extends AbstractSpell
     {
     	super.onServerCastTick(level, spellLevel, entity, playerMagicData);
     	
-    	List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, entity.getBoundingBox().inflate(1.0F), t -> t != entity && !t.isAlliedTo(entity));
+    	List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, entity.getBoundingBox().inflate(spellLevel * 0.5F), t -> t != entity && !t.isAlliedTo(entity));
     	list.forEach(t -> 
     	{
     		if(t.hurt(entity.damageSources().indirectMagic(entity, entity), spellLevel * 0.5F))
     		{
     			t.invulnerableTime = 0;
+    			t.setDeltaMovement(Vec3.ZERO);
+    			t.hurtMarked = true;
     		}
     	});
     }

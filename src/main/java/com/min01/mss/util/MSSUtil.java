@@ -6,8 +6,6 @@ import java.util.function.Consumer;
 
 import org.joml.Math;
 
-import com.min01.tickrateapi.util.TickrateUtil;
-
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -31,12 +29,6 @@ public class MSSUtil
 		});
 	}
 	
-	public static void setTickrateWithTime(Entity entity, int tickrate, int time)
-	{
-		TickrateUtil.setTickrate(entity, tickrate);
-		entity.getPersistentData().putInt("ForceTickCount", time);
-	}
-	
 	@SuppressWarnings("unchecked")
 	public static Iterable<Entity> getAllEntities(Level level)
 	{
@@ -52,13 +44,13 @@ public class MSSUtil
 		return null;
 	}
 	
-	public static Vec3 fromToVector(Vec3 from, Vec3 to, float scale)
+	public static Vec3 getVelocityTowards(Vec3 from, Vec3 to, float scale)
 	{
 		Vec3 motion = to.subtract(from).normalize();
 		return motion.scale(scale);
 	}
 	
-	public static Vec3 fromToVector(Vec3 from, Vec3 to)
+	public static Vec3 getVelocityTowards(Vec3 from, Vec3 to)
 	{
 		Vec3 motion = to.subtract(from).normalize();
 		return motion;
@@ -79,10 +71,9 @@ public class MSSUtil
 	@SuppressWarnings("unchecked")
 	public static Entity getEntityByUUID(Level level, UUID uuid)
 	{
-		Method m = ObfuscationReflectionHelper.findMethod(Level.class, "m_142646_");
 		try 
 		{
-			LevelEntityGetter<Entity> entities = (LevelEntityGetter<Entity>) m.invoke(level);
+			LevelEntityGetter<Entity> entities = (LevelEntityGetter<Entity>) GET_ENTITY.invoke(level);
 			return entities.get(uuid);
 		}
 		catch (Exception e) 
