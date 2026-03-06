@@ -126,7 +126,7 @@ public class EntityLaserSegment extends Projectile
 			y = -y * 0.5F;
 		}
 		
-		if(bounce < MAX_BOUNCE + (this.getBounce() * this.getSpellLevel()))
+		if(bounce < MAX_BOUNCE * this.getSpellLevel())
 		{
 			Vec3 motion = new Vec3(x, y, z).normalize().scale(100.0F);
 			
